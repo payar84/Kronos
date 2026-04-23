@@ -67,8 +67,9 @@
 </p>
 
 ## ✨ Live Demo 
-We have set up a live demo to visualize Kronos
+We have set up a live demo to visualize Kron
 
 ---
-
-> **Personal Note:** I'm using this fork primarily to experiment with fine-tuning Kronos on crypto exchange data (Binance/Coinbase). The upstream repo focuses on equities, but the OHLCV tokenizer should generalize well to 24/7 crypto markets. See my `experiments/` branch for WIP notebooks.
+> **Personal note (fork):** I'm using this repo primarily to experiment with Kronos on crypto-only data
+> (Binance + Coinbase). If you stumbled on this fork, the upstream repo at
+> [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos) is the authoritative source.
