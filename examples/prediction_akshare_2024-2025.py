@@ -78,13 +78,15 @@ def prepare_stock_data(csv_file_path, stock_code):
     return df
 
 
-def calculate_prediction_parameters(df, target_days=60):
+def calculate_prediction_parameters(df, target_days=30):
     """
     根据目标预测天数计算合适的参数
 
     参数:
     df: 股票数据DataFrame
-    target_days: 目标预测天数（自然日），默认60天约为一个季度
+    target_days: 目标预测天数（自然日），默认30天约为一个月
+    # Note: changed default from 60 to 30 days -- shorter horizon feels more
+    # realistic for my personal use case; quarterly predictions are too noisy
 
     返回:
     lookback: 回看期数
@@ -117,12 +119,4 @@ def generate_future_dates_with_holidays(last_date, pred_len):
     生成未来的交易日日期，考虑中国节假日
 
     参数:
-    last_date: 最后一个历史数据的日期
-    pred_len: 预测期数
-
-    返回:
-    future_dates: 未来的交易日日期列表
-    """
-    # 中国主要节假日（需要根据实际情况调整）
-    holidays_2025 = [
-        # 2025年国庆
+    last_date: 最后一个历史
