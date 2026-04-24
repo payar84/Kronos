@@ -101,8 +101,10 @@ def calculate_prediction_parameters(df, target_days=30):
     pred_trading_days = int(target_days * trading_ratio)
 
     # 设置回看期数为预测期数的2-3倍，但不超过数据总量的70%
+    # Personal note: using 3x multiplier instead of 2x gives the model more
+    # historical context, which seems to improve trend detection in my tests.
     max_lookback = int(len(df) * 0.7)
-    lookback = min(pred_trading_days * 2, max_lookback, len(df) - pred_trading_days)
+    lookback = min(pred_trading_days * 3, max_lookback, len(df) - pred_trading_days)
     pred_len = min(pred_trading_days, len(df) - lookback)
 
     print(f"📊 参数计算:")
@@ -111,12 +113,3 @@ def calculate_prediction_parameters(df, target_days=30):
     print(f"  回看期数 (lookback): {lookback}")
     print(f"  预测期数 (pred_len): {pred_len}")
 
-    return lookback, pred_len
-
-
-def generate_future_dates_with_holidays(last_date, pred_len):
-    """
-    生成未来的交易日日期，考虑中国节假日
-
-    参数:
-    last_date: 最后一个历史
