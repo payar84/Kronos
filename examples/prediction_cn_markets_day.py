@@ -25,6 +25,8 @@ Notes (personal):
       seemed to improve trend continuity on volatile small-cap stocks.
     - Bumped SAMPLE_COUNT to 3 so we can average multiple stochastic samples
       and get a smoother prediction band.
+    - Increased max_retries from 3 to 5 and sleep from 1.5s to 2.0s — akshare
+      occasionally rate-limits during market hours, extra retries help.
 """
 
 import os
@@ -54,7 +56,7 @@ SAMPLE_COUNT = 3  # average over 3 samples for a smoother prediction
 def load_data(symbol: str) -> pd.DataFrame:
     print(f"📥 Fetching {symbol} daily data from akshare ...")
 
-    max_retries = 3
+    max_retries = 5   # bumped from 3; akshare can be flaky during trading hours
     df = None
 
     # Retry mechanism
@@ -65,7 +67,7 @@ def load_data(symbol: str) -> pd.DataFrame:
                 break
         except Exception as e:
             print(f"⚠️ Attempt {attempt}/{max_retries} failed: {e}")
-        time.sleep(1.5)
+        time.sleep(2.0)  # increased from 1.5s to reduce rate-limit errors
 
     # If still empty after retries
     if df is None or df.empty:
@@ -97,14 +99,4 @@ def load_data(symbol: str) -> pd.DataFrame:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
     # Fix invalid open values
-    open_bad = (df["open"] == 0) | (df["open"].isna())
-    if open_bad.any():
-        print(f"⚠️  Fixed {open_bad.sum()} invalid open values.")
-        df.loc[open_bad, "open"] = df["close"].shift(1)
-        df["open"].fillna(df["close"], inplace=True)
-
-    # Fix missing amount
-    if df["amount"].isna().all() or (df["amount"] == 0).all():
-        df["amount"] = df["close"] * df["volume"]
-
-    print(f"✅ Data loaded: {l
+    open_bad 
